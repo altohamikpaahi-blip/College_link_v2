@@ -7,7 +7,21 @@
 </head>
 <body class="bg-gray-50 text-gray-850">
     <header class="bg-blue-950 text-white p-4 shadow-md flex justify-between items-center">
-        <h1 class="text-xl font-bold">إنشاء خطاب إلكتروني جديد</h1>
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-400 bg-blue-900 flex items-center justify-center shadow-inner">
+                {% if user.college.logo %}
+                    <img src="{{ user.college.logo.url }}" alt="شعار الكلية" class="w-full h-full object-cover">
+                {% else %}
+                    <svg class="w-7 h-7 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H5a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                {% endif %}
+            </div>
+            <div>
+                <h1 class="text-xl font-bold leading-tight">إنشاء خطاب إلكتروني جديد</h1>
+                <p class="text-xs text-blue-200">الكلية الحالية: {{ user.college.name|default:"غير محددة" }}</p>
+            </div>
+        </div>
         <a href="{% url 'dashboard' %}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 rounded text-sm font-bold">رجوع للوحة المراسلات</a>
     </header>
 
@@ -16,7 +30,6 @@
             <form method="post" enctype="multipart/form-data" class="space-y-6">
                 {% csrf_token %}
                 
-                <!-- تقسيم الجهة المستلمة إلى كرتين متجاورين -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-gray-700 text-sm font-bold mb-2">إلى كلية:</label>
@@ -56,15 +69,12 @@
         </div>
     </main>
 
-    <!-- كود جافا سكربت المتقدم للربط الديناميكي والذكي للقوائم -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // دجانغو يولد المعرفات تلقائياً ببادئة id_ تليها اسم الحقل
             const collegeSelect = document.getElementById('id_recipient_college');
             const userSelect = document.getElementById('id_recipient_user');
 
             if (collegeSelect && userSelect) {
-                // دالة فرز الموظفين بناءً على اختيار الكلية
                 function filterEmployees() {
                     const collegeId = collegeSelect.value;
                     
@@ -73,11 +83,9 @@
                         return;
                     }
 
-                    // إرسال طلب سحابي آمن في الخلفية لجلب موظفي الكلية المختارة فقط
                     fetch(`/api/get-employees/?college_id=${collegeId}`)
                         .then(response => response.json())
                         .then(data => {
-                            // حفظ الاختيار الحالي للمستلم إن وجد (مفيد في الردود التلقائية)
                             const currentVal = userSelect.value;
                             
                             userSelect.innerHTML = '<option value="">---------</option>';
@@ -96,10 +104,7 @@
                         });
                 }
 
-                // تفعيل المراقبة اللحظية عند تغيير اختيار الكلية
                 collegeSelect.addEventListener('change', filterEmployees);
-                
-                // تشغيل الفلترة عند تحميل الصفحة لأول مرة (لخدمة الردود التلقائية المعبأة مسبقاً)
                 filterEmployees();
             }
         });
