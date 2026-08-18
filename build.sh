@@ -11,5 +11,5 @@ python manage.py collectstatic --no-input
 # ترحيل وتأكيد جداول قاعدة البيانات السحابية
 python manage.py migrate
 
-# إعادة تعيين كلمة المرور للمستخدم altohami تلقائياً وتحديثها في قاعدة البيانات
-python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); u = User.objects.get(username='eltohami'); u.set_password('univ_pass_2026'); u.save(); print('تمت إعادة تعيين كلمة المرور بنجاح')"
+# تهيئة حساب الآدمن (altohami) بذكاء وأمان سواء كان موجوداً أو جديداً لتفادي أي انهيار في البناء
+python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); u, created = User.objects.get_or_create(username='altohami', defaults={'email': 'admin@email.com', 'is_superuser': True, 'is_staff': True}); u.set_password('univ_pass_2026'); u.is_superuser = True; u.is_staff = True; u.save(); print('تمت تهيئة حساب الآدمن بنجاح')"
