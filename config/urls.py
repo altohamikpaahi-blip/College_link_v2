@@ -1,11 +1,12 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path  # استيراد re_path للتحويل اليدوي لملفات المرفقات والشعارات
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve  # استيراد واجهة العرض الافتراضية للملفات
 from django.contrib.auth import views as auth_views
 from correspondence.views import (
     DashboardView, CreateDocumentView, DocumentDetailView, 
-    ReplyDocumentView, ForwardDocumentView, get_college_employees # استيراد الـ API الجديد
+    ReplyDocumentView, ForwardDocumentView, get_college_employees
 )
 
 urlpatterns = [
@@ -21,12 +22,12 @@ urlpatterns = [
     path('document/<int:pk>/forward/', ForwardDocumentView.as_view(), name='forward_document'),
     path('document/<int:pk>/', DocumentDetailView.as_view(), name='document_detail'), 
     
-    # رابط الـ API الجديد لجلب الموظفين المترابط بالكلية
+    # رابط الـ API لجلب الموظفين المترابط بالكلية
     path('api/get-employees/', get_college_employees, name='get_college_employees'),
     
     # الصفحة الرئيسية (لوحة المعلومات)
     path('', DashboardView.as_view(), name='dashboard'),
+    
+    # السطر الجديد والأهم لخدمة المرفقات وشعارات الكليات المرفوعة سحابياً على ريندر عندما يكون DEBUG = False
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
