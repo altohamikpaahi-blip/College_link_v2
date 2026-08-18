@@ -29,10 +29,22 @@
                 <h2 class="text-xl font-bold text-blue-950">{{ document.title }}</h2>
             </div>
 
+            <!-- صندوق نص الخطاب مع تفعيل العلامة المائية لشعار الكلية المرسلة -->
             <div>
                 <span class="text-xs font-bold text-gray-400 block mb-1">نص الخطاب</span>
-                <div class="p-4 bg-gray-50 rounded border text-sm leading-relaxed whitespace-pre-wrap">
-                    {{ document.content }}
+                <div class="relative p-6 bg-gray-50 rounded border text-sm leading-relaxed whitespace-pre-wrap overflow-hidden min-h-[250px] flex flex-col justify-between">
+                    
+                    <!-- عرض الشعار كعلامة مائية خفيفة جداً في الخلفية تمنع التشويش على النص -->
+                    {% if document.sender_college.logo %}
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.06]">
+                            <img src="{{ document.sender_college.logo.url }}" class="w-64 h-64 object-contain">
+                        </div>
+                    {% endif %}
+                    
+                    <!-- نص الخطاب الفعلي يظهر فوق العلامة المائية بوضوح -->
+                    <div class="relative z-10 text-gray-800">
+                        {{ document.content }}
+                    </div>
                 </div>
             </div>
 
@@ -131,7 +143,6 @@
                     <p><span class="text-gray-400 font-bold">الجهة المرسلة:</span> <strong class="text-gray-800">{{ document.sender_college.name }}</strong></p>
                     <p><span class="text-gray-400 font-bold">الجهة المستقبلة:</span> <strong class="text-gray-800">{{ document.recipient_college.name }}</strong></p>
                     
-                    <!-- إضافة المستلم المحدد بالاسم لبطاقة المعاملة إن وجد -->
                     {% if document.recipient_user %}
                         <p><span class="text-red-700 font-bold">المستلم المحدد:</span> <strong class="text-red-800">{{ document.recipient_user.get_full_name|default:document.recipient_user.username }}</strong></p>
                     {% else %}
