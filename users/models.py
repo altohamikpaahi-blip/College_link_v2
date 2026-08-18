@@ -5,10 +5,9 @@ class College(models.Model):
     name = models.CharField(max_length=255, verbose_name="اسم الكلية")
     code = models.CharField(max_length=10, unique=True, verbose_name="رمز الكلية")
     
-    # حقل رفع شعار الكلية (اختياري)
-    logo = models.ImageField(upload_to='colleges/logos/', null=True, blank=True, verbose_name="شعار الكلية")
+    # حقل شعار الكلية المخصص الجديد
+    logo = models.FileField(upload_to='college_logos/', null=True, blank=True, verbose_name="شعار الكلية")
 
-    # الدالة السحرية لإظهار الاسم الحقيقي للكلية في لوحة التحكم والقوائم
     def __str__(self):
         return self.name
 
@@ -22,7 +21,6 @@ class Department(models.Model):
     )
     name = models.CharField(max_length=255, verbose_name="اسم القسم")
 
-    # الدالة السحرية لإظهار اسم القسم مقروناً برمز الكلية التابع لها
     def __str__(self):
         return f"{self.name} - {self.college.code}"
 
