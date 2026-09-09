@@ -30,15 +30,19 @@
             <form method="post" enctype="multipart/form-data" class="space-y-6">
                 {% csrf_token %}
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- شبكة ثلاثية لتنظيم البيانات الأساسية الموجهة للخطاب -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-gray-700 text-sm font-bold mb-2">إلى كلية:</label>
                         {{ form.recipient_college }}
                     </div>
                     <div>
-                        <label class="block text-gray-700 text-sm font-bold mb-2">إلى الموظف المحدد بالكلية (اختياري):</label>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">المستلم المحدد (اختياري):</label>
                         {{ form.recipient_user }}
-                        <p class="text-[10px] text-gray-400 mt-1">اتركه فارغاً لإرسال الخطاب للكلية بشكل عام.</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">درجة الأهمية / الأولوية:</label>
+                        {{ form.priority }}
                     </div>
                 </div>
 
