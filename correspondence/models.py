@@ -11,6 +11,12 @@ class Document(models.Model):
         ('archived', 'تمت الأرشفة (مغلق)'),
     ]
 
+    PRIORITY_CHOICES = [
+        ('normal', 'عادية'),
+        ('urgent', 'عاجلة'),
+        ('very_urgent', 'عاجلة جداً'),
+    ]
+
     title = models.CharField(max_length=255, verbose_name="عنوان الخطاب")
     content = models.TextField(verbose_name="محتوى الخطاب")
     
@@ -50,6 +56,14 @@ class Document(models.Model):
         verbose_name="حالة الخطاب"
     )
     
+    # حقل درجة الأهمية الجديد
+    priority = models.CharField(
+        max_length=20,
+        choices=PRIORITY_CHOICES,
+        default='normal',
+        verbose_name="درجة الأهمية"
+    )
+    
     reference_number = models.CharField(
         max_length=50, 
         unique=True, 
@@ -67,7 +81,6 @@ class Document(models.Model):
         verbose_name="الخطاب الأصلي"
     )
     
-    # الحقل الجديد لمؤشر القراءة
     is_read = models.BooleanField(default=False, verbose_name="تمت القراءة")
     
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الإنشاء")
