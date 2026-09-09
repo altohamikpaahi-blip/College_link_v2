@@ -1,6 +1,5 @@
 from django import forms
 from .models import Document
-from users.models import College
 
 class DocumentForm(forms.ModelForm):
     # حقل رفع المرفقات
@@ -8,12 +7,15 @@ class DocumentForm(forms.ModelForm):
 
     class Meta:
         model = Document
-        fields = ['recipient_college', 'recipient_user', 'title', 'content'] # أضفنا حقل المستلم المحدد هنا
+        fields = ['recipient_college', 'recipient_user', 'priority', 'title', 'content'] # أضفنا حقل درجة الأهمية هنا
         widgets = {
             'recipient_college': forms.Select(attrs={
                 'class': 'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
             }),
             'recipient_user': forms.Select(attrs={
+                'class': 'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+            }),
+            'priority': forms.Select(attrs={
                 'class': 'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
             }),
             'title': forms.TextInput(attrs={
