@@ -33,6 +33,7 @@
     </header>
 
     <main class="max-w-4xl mx-auto p-6 mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- تفاصيل الخطاب الرئيسية -->
         <div class="bg-white p-6 rounded-lg shadow md:col-span-2 space-y-6">
             <div>
                 <span class="text-xs font-bold text-gray-400 block mb-1">الموضوع</span>
@@ -93,7 +94,7 @@
                 </div>
             {% endif %}
 
-            <!-- التوجيهات الحالية -->
+            <!-- عرض التوجيهات الحالية -->
             {% if document.forwards.all %}
                 <div class="pt-4 border-t space-y-3">
                     <span class="text-xs font-bold text-gray-400 block mb-2">الأقسام الموجه إليها هذا الخطاب</span>
@@ -134,6 +135,7 @@
 
         <!-- معلومات جانبية وتاريخ الحركة -->
         <div class="space-y-6">
+            <!-- كرت البيانات -->
             <div class="bg-white p-6 rounded-lg shadow space-y-4">
                 <h3 class="font-bold text-sm text-gray-700 border-b pb-2">بطاقة المعاملة</h3>
                 <div class="text-xs space-y-2">
@@ -148,10 +150,23 @@
                     
                     <p><span class="text-gray-400">المنشئ:</span> <strong class="text-gray-800">{{ document.sender.get_full_name|default:document.sender.username }}</strong></p>
                     <p><span class="text-gray-400">حالة الخطاب:</span> <span class="font-bold text-green-700">{{ document.get_status_display }}</span></p>
+                    
+                    <!-- إظهار درجة الأهمية بكرت البيانات المحدّث -->
+                    <p><span class="text-gray-400 font-bold">الأهمية / الأولوية:</span> 
+                        {% if document.priority == 'very_urgent' %}
+                            <span class="bg-red-100 text-red-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full animate-pulse">عاجلة جداً 🚨</span>
+                        {% elif document.priority == 'urgent' %}
+                            <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full">عاجلة ⚠️</span>
+                        {% else %}
+                            <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full">عادية</span>
+                        {% endif %}
+                    </p>
+                    
                     <p><span class="text-gray-400">تاريخ الإنشاء:</span> <strong class="text-gray-600">{{ document.created_at|date:"Y-m-d H:i" }}</strong></p>
                 </div>
             </div>
 
+            <!-- سجل التتبع والعمليات -->
             <div class="bg-white p-6 rounded-lg shadow space-y-4">
                 <h3 class="font-bold text-sm text-gray-700 border-b pb-2">سجل حركة الخطاب</h3>
                 {% if document.history.all %}
