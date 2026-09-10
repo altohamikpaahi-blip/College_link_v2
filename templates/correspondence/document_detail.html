@@ -35,7 +35,14 @@
     <main class="max-w-4xl mx-auto p-6 mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white p-6 rounded-lg shadow md:col-span-2 space-y-6">
             <div>
-                <span class="text-xs font-bold text-gray-400 block mb-1">الموضوع</span>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xs font-bold text-gray-400 block">الموضوع</span>
+                    {% if document.priority != 'normal' %}
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold {{ document.priority_badge_class }}">
+                            {{ document.get_priority_display }}
+                        </span>
+                    {% endif %}
+                </div>
                 <h2 class="text-xl font-bold text-blue-950">{{ document.title }}</h2>
             </div>
 
@@ -148,6 +155,7 @@
                     
                     <p><span class="text-gray-400">المنشئ:</span> <strong class="text-gray-800">{{ document.sender.get_full_name|default:document.sender.username }}</strong></p>
                     <p><span class="text-gray-400">حالة الخطاب:</span> <span class="font-bold text-green-700">{{ document.get_status_display }}</span></p>
+                    <p><span class="text-gray-400">أهمية الخطاب:</span> <span class="px-2 py-0.5 rounded text-[10px] font-bold {{ document.priority_badge_class }}">{{ document.get_priority_display }}</span></p>
                     <p><span class="text-gray-400">تاريخ الإنشاء:</span> <strong class="text-gray-600">{{ document.created_at|date:"Y-m-d H:i" }}</strong></p>
                 </div>
             </div>
