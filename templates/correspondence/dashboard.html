@@ -97,7 +97,13 @@
                                     </span>
                                 {% endif %}
                             </div>
-                            
+
+                            {% if doc.priority != 'normal' %}
+                                <span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold {{ doc.priority_badge_class }}">
+                                    {{ doc.get_priority_display }}
+                                </span>
+                            {% endif %}
+
                             <p class="text-xs text-gray-500 mt-1">المرسل: {{ doc.sender_college.name }} | الرقم المرجعي: {{ doc.reference_number }}</p>
                             <span class="text-[10px] text-gray-400">{{ doc.created_at|date:"Y-m-d H:i" }}</span>
                         </a>
@@ -124,6 +130,13 @@
                                     {{ doc.get_status_display }}
                                 </span>
                             </div>
+
+                            {% if doc.priority != 'normal' %}
+                                <span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold {{ doc.priority_badge_class }}">
+                                    {{ doc.get_priority_display }}
+                                </span>
+                            {% endif %}
+
                             <p class="text-xs text-gray-500 mt-1">المستقبل: {{ doc.recipient_college.name }} {% if doc.reference_number %} | صادر رقم: {{ doc.reference_number }} {% endif %}</p>
                             
                             <div class="flex justify-between items-center mt-2 pt-1 border-t border-gray-100 text-[10px]">
