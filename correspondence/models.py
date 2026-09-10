@@ -11,8 +11,16 @@ class Document(models.Model):
         ('archived', 'تمت الأرشفة (مغلق)'),
     ]
 
+    PRIORITY_CHOICES = [
+        ('normal', 'عادي'),
+        ('important', 'هام'),
+        ('urgent', 'عاجل'),
+        ('very_urgent', 'عاجل جداً'),
+    ]
+
     title = models.CharField(max_length=255, verbose_name="عنوان الخطاب")
     content = models.TextField(verbose_name="محتوى الخطاب")
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='normal', verbose_name="أهمية الخطاب")
     
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='sent_documents', verbose_name="المنشئ")
     sender_college = models.ForeignKey(College, on_delete=models.PROTECT, related_name='outgoing_documents', verbose_name="الكلية المرسلة")
@@ -29,6 +37,16 @@ class Document(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.get_status_display()})"
+
+    @property
+    def priority_badge_class(self):
+        """أصناف Tailwind لعرض شارة أهمية الخطاب حسب الدرجة"""
+        return {
+            'normal': 'bg-gray-100 text-gray-600',
+            'important': 'bg-blue-100 text-blue-800',
+            'urgent': 'bg-orange-100 text-orange-800',
+            'very_urgent': 'bg-red-100 text-red-800',
+        }.get(self.priority, 'bg-gray-100 text-gray-600')
 
     def generate_reference(self):
         import datetime
