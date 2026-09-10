@@ -12,8 +12,8 @@ class DocumentHistoryInline(admin.TabularInline):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'sender_college', 'recipient_college', 'status', 'reference_number', 'created_at')
-    list_filter = ('status', 'sender_college', 'recipient_college')
+    list_display = ('title', 'sender_college', 'recipient_college', 'priority', 'status', 'reference_number', 'created_at')
+    list_filter = ('status', 'priority', 'sender_college', 'recipient_college')
     search_fields = ('title', 'content', 'reference_number')
     inlines = [AttachmentInline, DocumentHistoryInline]
 
