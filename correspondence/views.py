@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, DetailView, View
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value, IntegerField
 from django.http import JsonResponse # استيراد الرد الذكي
 from users.models import College, UserProfile
 from .forms import DocumentForm
@@ -43,8 +43,16 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 )
                 context['query'] = query
 
-            context['inbox'] = inbox_qs.order_by('-created_at')
-            context['outbox'] = outbox_qs.order_by('-created_at')
+            # ترتيب الخطابات بحيث تظهر الأكثر أهمية (عاجل جداً / عاجل) أولاً، ثم الأحدث تاريخاً
+            priority_order = Case(
+                When(priority='very_urgent', then=Value(0)),
+                When(priority='urgent', then=Value(1)),
+                When(priority='important', then=Value(2)),
+                default=Value(3),
+                output_field=IntegerField(),
+            )
+            context['inbox'] = inbox_qs.annotate(priority_order=priority_order).order_by('priority_order', '-created_at')
+            context['outbox'] = outbox_qs.annotate(priority_order=priority_order).order_by('priority_order', '-created_at')
 
             if user.department:
                 dept_forwards_qs = DocumentForward.objects.filter(department=user.department)
