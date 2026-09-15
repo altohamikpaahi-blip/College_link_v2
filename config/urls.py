@@ -6,7 +6,8 @@ from django.views.static import serve  # استيراد واجهة العرض ا
 from django.contrib.auth import views as auth_views
 from correspondence.views import (
     DashboardView, CreateDocumentView, DocumentDetailView, 
-    ReplyDocumentView, ForwardDocumentView, get_college_employees
+    ReplyDocumentView, ForwardDocumentView, get_college_employees,
+    export_documents_csv  # تم استيراد دالة التصدير هنا
 )
 
 urlpatterns = [
@@ -25,9 +26,12 @@ urlpatterns = [
     # رابط الـ API لجلب الموظفين المترابط بالكلية
     path('api/get-employees/', get_college_employees, name='get_college_employees'),
     
+    # رابط تصدير التقارير (Excel/CSV) الجديد
+    path('export/csv/', export_documents_csv, name='export_documents_csv'),
+    
     # الصفحة الرئيسية (لوحة المعلومات)
     path('', DashboardView.as_view(), name='dashboard'),
     
-    # السطر الجديد والأهم لخدمة المرفقات وشعارات الكليات المرفوعة سحابياً على ريندر عندما يكون DEBUG = False
+    # السطر الجديد والأهم لخدمة المرفقات والشعارات الكليات المرفوعة سحابياً على ريندر عندما يكون DEBUG = False
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
