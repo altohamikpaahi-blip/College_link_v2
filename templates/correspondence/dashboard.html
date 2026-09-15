@@ -34,7 +34,7 @@
         </div>
     </header>
 
-    <!-- قسم البحث وإنشاء خطاب جديد -->
+    <!-- قسم البحث وإنشاء خطاب جديد وتصدير التقارير -->
     <div class="max-w-7xl mx-auto px-6 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <!-- نموذج البحث المتقدم -->
         <form method="get" action="{% url 'dashboard' %}" class="w-full sm:w-96 flex gap-2">
@@ -49,10 +49,19 @@
             {% endif %}
         </form>
 
-        <!-- زر إنشاء خطاب جديد -->
-        <a href="{% url 'create_document' %}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-bold text-sm shadow flex items-center gap-2 w-full sm:w-auto justify-center transition">
-            <span>+</span> إنشاء خطاب جديد
-        </a>
+        <!-- مجموعة الأزرار (تصدير Excel + إنشاء خطاب جديد) -->
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <!-- زر التصدير الجديد -->
+            <a href="{% url 'export_documents_csv' %}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow flex items-center gap-2 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span>تصدير Excel</span>
+            </a>
+
+            <!-- زر إنشاء خطاب جديد -->
+            <a href="{% url 'create_document' %}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-bold text-sm shadow flex items-center gap-2 transition">
+                <span>+</span> إنشاء خطاب جديد
+            </a>
+        </div>
     </div>
 
     <!-- قسم عرض الخطابات الموجهة للقسم الأكاديمي -->
