@@ -1,3 +1,4 @@
+import csv
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, DetailView, View
@@ -5,7 +6,8 @@ from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, IntegerField
-from django.http import JsonResponse # استيراد الرد الذكي
+from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.decorators import login_required
 from users.models import College, UserProfile
 from .forms import DocumentForm
 from .models import Document, Attachment, DocumentHistory, Department, DocumentForward
@@ -241,3 +243,34 @@ def get_college_employees(request):
         display_name = full_name if full_name else u['username']
         user_list.append({'id': u['id'], 'name': display_name})
     return JsonResponse({'users': user_list})
+
+
+@login_required
+def export_documents_csv(request):
+    """دالة تصدير المستندات والمعاملات إلى ملف CSV متوافق مع Excel"""
+    response = HttpResponse(content_type='text/csv; charset=utf-8-sig')
+    response['Content-Disposition'] = 'attachment; filename="correspondence_report.csv"'
+
+    writer = csv.writer(response)
+    # ترويسة الأعمدة بالعربي
+    writer.writerow(['الرقم المرجعي', 'عنوان المستند', 'المرسل', 'المستلم', 'الأولوية', 'تاريخ الإنشاء', 'الحالة'])
+
+    # فلترة المستندات حسب كلية المستخدم الحالي لضمان الخصوصية
+    user = request.user
+    if user.college:
+        documents = Document.objects.filter(Q(sender_college=user.college) | Q(recipient_college=user.college)).distinct()
+    else:
+        documents = Document.objects.none()
+
+    for doc in documents:
+        writer.writerow([
+            getattr(doc, 'reference_number', ''),
+            getattr(doc, 'title', ''),
+            getattr(doc, 'sender', ''),
+            getattr(doc, 'recipient_college', ''),
+            getattr(doc, 'priority', ''),
+            doc.created_at.strftime('%Y-%m-%d %H:%M') if hasattr(doc, 'created_at') and doc.created_at else '',
+            getattr(doc, 'status', ''),
+        ])
+
+    return response
